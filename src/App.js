@@ -1,14 +1,15 @@
 import React from 'react';
+import Main from './pages/main/Index';
 import './App.css';
 
 function App() {
+  var state = {
+    documents: ["doc1", "doc2", "doc3", "doc4"]
+  }
+
   return (
     <div className="app">
-      <header className="app-header">
-        <p>
-          Edit  <code>src/App.js</code> and save to reload.
-        </p>
-      </header>
+      <Main documents={state.documents}/>
     </div>
   );
 }
