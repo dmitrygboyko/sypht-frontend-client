@@ -1,12 +1,15 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.css';
+import './Main.css'
 import DocumentsGrid from './DocumentsGrid'
 
 function Main(props) {
     return (
-        <div>
+        <div className="component-main">
             Documents
-            <button>Upload</button>
             <DocumentsGrid documents={props.documents}/>
+            <br/>
+            <button type="button" className="btn btn-light upload">Upload</button>
         </div>
     );
 }

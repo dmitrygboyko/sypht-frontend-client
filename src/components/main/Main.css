@@ -1,0 +1,12 @@
+ul {
+    width: 100%;
+    color: black;
+}
+
+.component-main {
+    min-width: 500px;
+}
+
+.upload {
+    width: 100%;
+}
