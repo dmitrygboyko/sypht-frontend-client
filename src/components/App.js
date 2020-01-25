@@ -1,8 +1,10 @@
 import React from 'react';
-import{ BrowserRouter, Route, Link } from 'react-router-dom'
-import Documents from './components/documents/Index';
+import{ BrowserRouter, Route } from 'react-router-dom'
+
+import Documents from './documents/Index';
+import DocumentDetails from './documents/DocumentDetails';
+
 import './App.css';
-import DocumentDetails from './components/documents/DocumentDetails';
 
 function App() {
   return (
