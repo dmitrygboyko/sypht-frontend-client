@@ -11,7 +11,7 @@ function App() {
     <div className="app">
       <BrowserRouter>
         <Route path="/" exact component={Documents}></Route>
-        <Route path="/documents/:documentId" exact component={DocumentDetails}></Route>
+        <Route path="/documents/:fileId" exact component={DocumentDetails}></Route>
       </BrowserRouter>
     </div>
   );
