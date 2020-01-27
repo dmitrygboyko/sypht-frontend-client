@@ -11,17 +11,23 @@ function Main(props) {
     const isAuthenticated = !!props.authToken;
 
     if (isAuthenticated) {
-        return (
-            <div className="component-main">
-                <div>
-                    <button onClick={() => props.clearAuthToken()}>Clear Access Token</button>
+        if (props.files.length == 0) {
+            return <div>No files uploaded</div>
+        }
+        else {
+            return (
+                <div className="component-main">
+                    <div className="authenticate">
+                        <p>You are authenticated. Enjoy Sypht API</p>
+                        <button className="btn btn-light" onClick={() => props.clearAuthToken()}>Clear Access Token</button>
+                    </div>
+                    <h4>Uploaded flies</h4>
+                    <FileList files={props.files} selectFile={props.selectFile} />
+                    <br />
+                    <UploadFile uploadFile={props.uploadFile} authToken={props.authToken} />
                 </div>
-                <p>Uploaded flies</p>
-                <FileList files={props.files} selectFile={props.selectFile}/>
-                <br />
-                <UploadFile uploadFile={props.uploadFile} authToken={props.authToken}/>
-            </div>
-        )
+            )
+        }
     }
     else {
         return <Authenticate authenticate={props.authenticate}></Authenticate>

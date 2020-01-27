@@ -23,12 +23,15 @@ function FileDetails(props) {
     else {
         var data = props.selectedFile.data;
         var fields = data.results.fields.map((item, index) => {
-            const value = item.value ? item.value.toString() : "";
+            const value = item.value ? item.value.toString() : "empty";
+            const nameParts = item.name.split('.');
+            var name = nameParts.length == 2 ? nameParts[1] : item.name;
+            name = name.charAt(0).toUpperCase() + name.substring(1)
 
             return (
                 <li key={item.name} className="list-group-item">
                     <div>
-                        <span>{item.name}:</span>
+                        <span>{name}:</span>
                         <span>{value}</span>
                     </div>
                 </li>

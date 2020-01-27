@@ -7,6 +7,26 @@ ul {
     min-width: 500px;
 }
 
-.upload {
+.form-control {
+    margin: 10px 0px;
+}
+
+.btn {
     width: 100%;
+}
+
+.alignLeft {
+	float: left;
+}
+.alignRight {
+	float: right;
+}
+
+.alignClear {
+    clear: both;
+}
+
+.authenticate {
+    text-align: center;
+    margin: 20px 0px 40px 0px;
 }

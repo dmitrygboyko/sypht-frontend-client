@@ -6,8 +6,11 @@ function FileList(props) {
         return (
             <li key={index} className="list-group-item">
                 <div>
-                    <span>{file.name}</span>
+                    <div className="alignLeft">{file.name}</div>
+                    <div className="alignRight">
                     <Link to={`/documents/${file.id}`} onClick={() => props.selectFile(file.id, props.files)}>View</Link>
+                    </div>
+                    <div className="alignClear"></div>
                 </div>
             </li>);
     });

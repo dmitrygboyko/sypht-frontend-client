@@ -1,1 +1,5 @@
-just to commit folder to git
+{
+  fileId: '74916e75-2532-4f67-80ed-3878e4b30301',
+  uploadedAt: '2020-01-27T15:38:50.219Z',
+  status: 'RECEIVED'
+}

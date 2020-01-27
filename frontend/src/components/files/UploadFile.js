@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 function UploadFile(props) {
     var fileUploadRef = React.createRef();
@@ -15,7 +15,7 @@ function UploadFile(props) {
     return (
         <form>
             <input type="file" name="uploadFileInput" hidden ref={fileUploadRef} onChange={() => uploadFile()}></input>
-            <button className="btn btn-light upload" onClick={(e) => selectFile(e)}>Upload file</button>
+            <button className="btn btn-info upload" onClick={(e) => selectFile(e)}>Upload file</button>
         </form>
     );
 }
