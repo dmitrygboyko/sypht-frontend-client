@@ -2,6 +2,9 @@ const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
+const path = require('path');
+const fs = require('fs');
+const FormData = require('form-data')
 
 const app = express();
 
@@ -31,27 +34,34 @@ app.post('/authenticate', async (req, res) => {
 });
 
 app.post('/fileUpload', async (req, res) => {
-    // console.log(req.files.fileToUpload.name);
-    // console.log(req.files.fileToUpload.data);
+    var file = req.files.fileToUpload;
 
-    try{
-        var fileName = req.files.fileToUpload.name;
-        var fileData = req.files.fileToUpload.data;
+    var filePath = path.join(__dirname, '../uploads', file.name);
+    file.mv(filePath, (err) => {
+        if (err) throw err;
+    })
+
+    try {
+        var fileName = file.name;
+        var fileData = fs.createReadStream(filePath);
+        //var fileData = req.files.fileToUpload.data;
         let formData = new FormData();
         formData.append('fileToUpload', fileData, {fileName});
         formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
 
         let {data} = await axios.post(`https://api.sypht.com/fileupload`, formData, {
             headers:{
-                'Authorization':`Bearer ${req.headers.authorization}`,
-                'Content-Type': 'multipart/form-data'
+                'Authorization':`${req.headers.authorization}`,
+                'Content-Type': formData.getHeaders()['content-type']
             }
+        },
+        {
+            timeout: 30000
         });
 
-        console.log(data);
-
         res.send(data);
-    }catch(error){
+    }
+    catch(error){
         throw error;
     }
 });

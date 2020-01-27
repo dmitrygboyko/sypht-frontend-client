@@ -19,7 +19,7 @@ function Main(props) {
                 <p>Uploaded flies</p>
                 <FileList files={props.files} selectFile={props.selectFile}/>
                 <br />
-                <UploadFile uploadFile={props.uploadFile}/>
+                <UploadFile uploadFile={props.uploadFile} authToken={props.authToken}/>
             </div>
         )
     }
