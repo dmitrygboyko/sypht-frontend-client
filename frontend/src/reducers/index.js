@@ -15,9 +15,9 @@ const defaultFileManagementState = {
 
 const authenticationReducer = (state = getStorateItem(), action) => {
     switch (action.type) {
-        case "AUTHENTICATE":
+        case "AUTHENTICATION_RESULT_RECEIVED":
         case "CLEAR_AUTH_TOKEN":
-            return Object.assign({}, state, { authToken: action.payload });
+            return action.payload;
         default:
             return state;
     }
@@ -45,6 +45,12 @@ const fileManagementReducer = (state = defaultFileManagementState, action) => {
                 selectedFile: selectedFile,
                 files: files
             });
+        case "FILE_UPLOADED":
+            var newState = Object.assign({}, state.files, {
+                files: [...state.files, action.payload]
+            });
+
+            return newState;
         default:
             return state;
     }

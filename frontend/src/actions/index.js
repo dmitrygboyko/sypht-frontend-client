@@ -1,16 +1,18 @@
 import api from '../api'
 
-export const authenticate = () => async dispatch => {
-  const authResult = await api.post('/authenticate');
+export const authenticate = (clientId, clientSecret) => async dispatch => {
+  const authResult = await api.post('/authenticate', {
+    "clientId": clientId,
+    "clientSecret": clientSecret
+  });
 
   dispatch({
-    type: 'AUTHENTICATE',
+    type: 'AUTHENTICATION_RESULT_RECEIVED',
     payload: authResult.data.access_token
   });
 };
 
 export const clearAuthToken = () => dispatch => {
-
   dispatch({
     type: 'CLEAR_AUTH_TOKEN',
     payload: ""
@@ -35,6 +37,27 @@ export const getFileResults = (fileId, authToken) => async dispatch => {
     payload: {
       fileId: fileId,
       data: fileResults.data
+    }
+  });
+};
+
+export const uploadFile = (authToken, file) => async dispatch => {
+  let formData = new FormData();
+  formData.append('fileToUpload', file);
+  formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
+
+  let { data } = await api.post('/fileupload', formData, {
+    headers: {
+      'Authorization': `Bearer ${authToken}`,
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+
+  dispatch({
+    type: "FILE_UPLOADED",
+    payload: {
+      name: file.name,
+      id: data.fileId
     }
   });
 };

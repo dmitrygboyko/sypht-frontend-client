@@ -4,17 +4,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './Files.css'
 import FileList from './FileList'
 import Authenticate from './Authenticate'
-import UploadDocumentForm from './UploadDocumentForm'
-import { authenticate, clearAuthToken, selectFile } from '../../actions'
+import UploadFile from './UploadFile'
+import { authenticate, clearAuthToken, selectFile, uploadFile } from '../../actions'
 
 function Main(props) {
-    // const addDocument = () => {
-    //     var doc = { text: "Doc " + (documents.length + 1) }
-    //     const newDocuments = [...documents, doc];
-    //     setDocuments(newDocuments);
-    // };
-
-    const isAuthenticated = Boolean(props.authToken);
+    const isAuthenticated = !!props.authToken;
 
     if (isAuthenticated) {
         return (
@@ -25,7 +19,7 @@ function Main(props) {
                 <p>Uploaded flies</p>
                 <FileList files={props.files} selectFile={props.selectFile}/>
                 <br />
-                {/* <UploadDocumentForm addDocument={addDocument}/> */}
+                <UploadFile uploadFile={props.uploadFile}/>
             </div>
         )
     }
@@ -43,4 +37,4 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps,
-    { authenticate, clearAuthToken, selectFile })(Main);
+    { authenticate, clearAuthToken, selectFile, uploadFile })(Main);
