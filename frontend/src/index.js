@@ -9,6 +9,8 @@ import thunk from 'redux-thunk';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 
+store.subscribe(() => localStorage.setItem('authToken', store.getState().authToken));
+
 ReactDOM.render(
     <Provider store={store}>
         <App />

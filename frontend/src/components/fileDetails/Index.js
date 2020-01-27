@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import {connect} from 'react-redux'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
 import loader from '../../images/ajax-loader.gif'
+import { getFileResults } from '../../actions'
 
-function DocumentDetails(props) {
-    console.log(props.selectedFile)
-    var results = null;
+function FileDetails(props) {
+    const requireLoading = !props.selectedFile || !props.selectedFile.isLoaded
 
-    const fetchDocument = async fileId => {
-        const authResult = await axios.post('http://localhost:3001/authenticate');
-        axios.defaults.headers.common = { 'Authorization': `Bearer ${authResult.data.access_token}` }
-        const result = await axios.get(`http://localhost:3001/results/${fileId}`);
-    };
+    useEffect(() => {
+        if (requireLoading) {
+            props.getFileResults(props.match.params.fileId, props.authToken);
+        }
+    });
 
-    if (!results) {
+    if (requireLoading) {
         return (
             <div>
                 <img src={loader} alt="loading..." />
@@ -22,7 +21,8 @@ function DocumentDetails(props) {
         )
     }
     else {
-        var fields = results.results.fields.map((item, index) => {
+        var data = props.selectedFile.data;
+        var fields = data.results.fields.map((item, index) => {
             const value = item.value ? item.value.toString() : "";
 
             return (
@@ -42,15 +42,15 @@ function DocumentDetails(props) {
                         <ul className="list-group">
                             <li className="list-group-item">
                                 <span>File Id:</span>
-                                <span>{results.fileId}</span>
+                                <span>{data.fileId}</span>
                             </li>
                             <li className="list-group-item">
                                 <span>Status:</span>
-                                <span>{results.status}</span>
+                                <span>{data.status}</span>
                             </li>
                             <li className="list-group-item">
                                 <span>Timestamp:</span>
-                                <span>{results.results.timestamp}</span>
+                                <span>{data.results.timestamp}</span>
                             </li>
                         </ul>
                     </div>
@@ -66,8 +66,13 @@ function DocumentDetails(props) {
 }
 
 const mapStateToProps = (state, props) => {
-    const selectedFile = state.sypht.files.find(x=> x.id == props.match.params.fileId)
-    return { selectedFile: selectedFile };
+    const authToken = state.authToken;
+    const selectedFile = state.fileManagement.selectedFile
+    return {
+        authToken: authToken,
+        selectedFile: selectedFile
+    };
 };
 
-export default connect(mapStateToProps)(DocumentDetails);
+export default connect(mapStateToProps,
+    { getFileResults })(FileDetails);

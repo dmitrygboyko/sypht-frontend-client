@@ -17,9 +17,9 @@ app.post('/authenticate', async (req, res) => {
             audience: 'https://api.sypht.com',
             grant_type: 'client_credentials'
         },
-        {
-            timeout: 10000
-        });
+            {
+                timeout: 10000
+            });
 
         res.send(data);
     }
@@ -30,15 +30,20 @@ app.post('/authenticate', async (req, res) => {
 
 app.get('/results/:fileId', async (req, res) => {
 
-    let {data} = await axios.get(`https://api.sypht.com/result/final/${req.params.fileId}`, {
-        headers:{
-            'Authorization':`${req.headers.authorization}`
-        }
-    },
-    {
-        timeout: 10000
-    });
-    res.send(data);
+    try {
+        let { data } = await axios.get(`https://api.sypht.com/result/final/${req.params.fileId}`, {
+            headers: {
+                'Authorization': `${req.headers.authorization}`
+            }
+        },
+            {
+                timeout: 10000
+            });
+        res.send(data);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 
 
