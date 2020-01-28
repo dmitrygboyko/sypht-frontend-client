@@ -29,9 +29,7 @@ app.post('/authenticate', async (req, res, next) => {
         res.send(data);
     }
     catch (error) {
-        res.statusCode = error.response.status;
-        var resultError = new Error(error.response.statusCode);
-        next(resultError);
+        handleError(error, res, next);
     }
 });
 
@@ -64,9 +62,7 @@ app.post('/fileUpload', async (req, res, next) => {
         res.send(data);
     }
     catch (error) {
-        res.statusCode = error.response.status;
-        var resultError = new Error(error.response.statusCode);
-        next(resultError);
+        handleError(error, res, next);
     }
 });
 
@@ -80,11 +76,18 @@ app.get('/results/:fileId', async (req, res, next) => {
         res.send(data);
     }
     catch (error) {
-        res.statusCode = error.response.status;
-        var resultError = new Error(error.response.statusCode);
-        next(resultError);
+        handleError(error, res, next);
     }
 });
+
+const handleError = (error, res, next) => {
+    if (error.response) {
+        res.statusCode = error.response.status;
+        error = new Error(error.message);
+    }
+
+    next(error);
+}
 
 
 

@@ -1,4 +1,5 @@
 import api from '../api'
+import * as actionTypes from '../actionTypes'
 
 export const authenticate = (clientId, clientSecret) => async dispatch => {
   const postedData = {
@@ -9,13 +10,13 @@ export const authenticate = (clientId, clientSecret) => async dispatch => {
   await api.post('/authenticate', postedData)
     .then(data => {
       dispatch({
-        type: 'AUTHENTICATION_RESULT_RECEIVED',
+        type: actionTypes.AUTHENTICATION_RESULT_RECEIVED,
         payload: data.data.access_token
       });
     })
     .catch(error => {
       dispatch({
-        type: 'AUTHENTICATION_ERROR',
+        type: actionTypes.AUTHENTICATION_ERROR,
         payload: getResponseError(error)
       });
     });
@@ -23,7 +24,7 @@ export const authenticate = (clientId, clientSecret) => async dispatch => {
 
 export const clearAccessToken = () => dispatch => {
   dispatch({
-    type: 'CLEAR_AUTH_TOKEN',
+    type: actionTypes.CLEAR_AUTH_TOKEN,
     payload: ""
   });
 };
@@ -32,7 +33,7 @@ export const selectFile = (fileId, files) => dispatch => {
   const selectedFile = files.find(x => x.id == fileId);
 
   dispatch({
-    type: 'FILE_SELELCTED',
+    type: actionTypes.FILE_SELELCTED,
     payload: selectedFile
   });
 };
@@ -42,7 +43,7 @@ export const getFileResults = (fileId, accessToken) => async dispatch => {
   await api.get(`/results/${fileId}`)
     .then(data => {
       dispatch({
-        type: 'RESULT_RECEIVED',
+        type: actionTypes.RESULT_RECEIVED,
         payload: {
           fileId: fileId,
           data: data.data
@@ -51,7 +52,7 @@ export const getFileResults = (fileId, accessToken) => async dispatch => {
     })
     .catch(error => {
       dispatch({
-        type: 'FILE_RESULT_ERROR',
+        type: actionTypes.FILE_RESULT_ERROR,
         payload: getResponseError(error)
       });
     });
@@ -70,7 +71,7 @@ export const uploadFile = (accessToken, file) => async dispatch => {
   })
   .then(data => {
     dispatch({
-      type: "FILE_UPLOADED",
+      type: actionTypes.FILE_UPLOADED,
       payload: {
         name: file.name,
         id: data.data.fileId
@@ -79,7 +80,7 @@ export const uploadFile = (accessToken, file) => async dispatch => {
   })
   .catch(error => {
     dispatch({
-      type: 'FILE_UPLOAD_ERROR',
+      type: actionTypes.FILE_UPLOAD_ERROR,
       payload: getResponseError(error)
     });
   });;

@@ -1,4 +1,5 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
+import * as actionTypes from '../actionTypes';
 
 function getAuthState() {
     return {
@@ -20,13 +21,13 @@ const defaultFileManagementState = {
 
 const authenticationReducer = (state = getAuthState(), action) => {
     switch (action.type) {
-        case "AUTHENTICATION_RESULT_RECEIVED":
-        case "CLEAR_AUTH_TOKEN":
+        case actionTypes.AUTHENTICATION_RESULT_RECEIVED:
+        case actionTypes.CLEAR_AUTH_TOKEN:
             return Object.assign({}, state, {
                 errorMessage: "",
                 accessToken: action.payload
             });
-        case "AUTHENTICATION_ERROR":
+        case actionTypes.AUTHENTICATION_ERROR:
             return Object.assign({}, state, { errorMessage: action.payload })
         default:
             return state;
@@ -35,19 +36,19 @@ const authenticationReducer = (state = getAuthState(), action) => {
 
 const fileManagementReducer = (state = defaultFileManagementState, action) => {
     switch (action.type) {
-        case "FILE_SELELCTED":
+        case actionTypes.FILE_SELELCTED:
             return Object.assign({}, state, { errorMessage: "", selectedFile: action.payload });
-        case "RESULT_RECEIVED":
+        case actionTypes.RESULT_RECEIVED:
             return getFileResultReceivedState(state, action);
-        case "FILE_UPLOADED":
+        case actionTypes.FILE_UPLOADED:
             var newState = Object.assign({}, state.files, {
                 errorMessage: "",
                 files: [...state.files, action.payload]
             });
 
             return newState;
-        case "FILE_RESULT_ERROR":
-        case "FILE_UPLOAD_ERROR":
+        case actionTypes.FILE_RESULT_ERROR:
+        case actionTypes.FILE_UPLOAD_ERROR:
             return Object.assign({}, state, {errorMessage: action.payload});
         default:
             return state;
