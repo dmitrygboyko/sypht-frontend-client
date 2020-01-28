@@ -13,6 +13,10 @@ function FileDetails(props) {
         }
     });
 
+    if (!!props.errorMessage) {
+        return <p className="error">{props.errorMessage}</p>
+    }
+
     if (requireLoading) {
         return (
             <div>
@@ -73,7 +77,8 @@ const mapStateToProps = (state, props) => {
     const selectedFile = state.fileManagement.selectedFile
     return {
         auth: auth,
-        selectedFile: selectedFile
+        selectedFile: selectedFile,
+        errorMessage: state.fileManagement.errorMessage
     };
 };
 

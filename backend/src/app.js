@@ -68,7 +68,7 @@ app.post('/fileUpload', async (req, res) => {
     }
 });
 
-app.get('/results/:fileId', async (req, res) => {
+app.get('/results/:fileId', async (req, res, next) => {
     try {
         let { data } = await axios.get(`https://api.sypht.com/result/final/${req.params.fileId}`, {
             headers: {
@@ -78,7 +78,9 @@ app.get('/results/:fileId', async (req, res) => {
         res.send(data);
     }
     catch (error) {
-        console.log(error);
+        res.statusCode = error.response.status;
+        var resultError = new Error(error.response.statusCode);
+        next(resultError);
     }
 });
 

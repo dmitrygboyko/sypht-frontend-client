@@ -1,22 +1,24 @@
 import api from '../api'
 
 export const authenticate = (clientId, clientSecret) => async dispatch => {
-  await api.post('/authenticate', {
+  const postedData = {
     "clientId": clientId,
     "clientSecret": clientSecret
-  })
-  .then(data => {
-    dispatch({
-      type: 'AUTHENTICATION_RESULT_RECEIVED',
-      payload: data.data.access_token
+  };
+
+  await api.post('/authenticate', postedData)
+    .then(data => {
+      dispatch({
+        type: 'AUTHENTICATION_RESULT_RECEIVED',
+        payload: data.data.access_token
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: 'AUTHENTICATION_ERROR',
+        payload: getResponseError(error)
+      });
     });
-  })
-  .catch(function (error) {
-    dispatch({
-      type: 'AUTHENTICATION_ERROR',
-      payload: `Error: ${error.response.status} ${error.response.statusText}`
-    });
-  });
 };
 
 export const clearAccessToken = () => dispatch => {
@@ -37,15 +39,22 @@ export const selectFile = (fileId, files) => dispatch => {
 
 export const getFileResults = (fileId, accessToken) => async dispatch => {
   api.defaults.headers.common = { 'Authorization': `Bearer ${accessToken}` }
-  const fileResults = await api.get(`/results/${fileId}`);
-
-  dispatch({
-    type: 'RESULT_RECEIVED',
-    payload: {
-      fileId: fileId,
-      data: fileResults.data
-    }
-  });
+  await api.get(`/results/${fileId}`)
+    .then(data => {
+      dispatch({
+        type: 'RESULT_RECEIVED',
+        payload: {
+          fileId: fileId,
+          data: data.data
+        }
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: 'FILE_RESULT_ERROR',
+        payload: getResponseError(error)
+      });
+    });
 };
 
 export const uploadFile = (accessToken, file) => async dispatch => {
@@ -68,3 +77,5 @@ export const uploadFile = (accessToken, file) => async dispatch => {
     }
   });
 };
+
+const getResponseError = (error) => `Error occured: ${error.message}`;
