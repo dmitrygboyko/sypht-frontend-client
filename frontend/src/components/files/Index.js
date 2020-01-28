@@ -11,12 +11,12 @@ function Main(props) {
     const isAuthenticated = !!props.auth.accessToken;
 
     if (isAuthenticated) {
-        var fileList = props.files.length == 0
+        var fileList = props.fileManagement.files.length === 0
             ? <h4>No files uploaded</h4>
             : (
                 <div>
                     <h4>Uploaded flies</h4>
-                    <FileList files={props.files} selectFile={props.selectFile} />
+                    <FileList files={props.fileManagement.files} selectFile={props.selectFile} />
                 </div>
             );
 
@@ -28,7 +28,7 @@ function Main(props) {
                 </div>
                 {fileList}
                 <br />
-                <UploadFile uploadFile={props.uploadFile} accessToken={props.auth.accessToken} />
+                <UploadFile uploadFile={props.uploadFile} accessToken={props.auth.accessToken} errorMessage={props.fileManagement.errorMessage}/>
             </div>
         )
     }
@@ -38,12 +38,9 @@ function Main(props) {
 }
 
 
-const mapStateToProps = state => {
-    return {
-        auth: state.auth,
-        files: state.fileManagement.files
-    };
-};
+//It is not a good practise, but our app is small 
+// and we uilize almost whole state here
+const mapStateToProps = state => state  
 
 export default connect(mapStateToProps,
-    { authenticate, clearAccessToken, selectFile, uploadFile })(Main);
+{ authenticate, clearAccessToken, selectFile, uploadFile })(Main);

@@ -62,20 +62,27 @@ export const uploadFile = (accessToken, file) => async dispatch => {
   formData.append('fileToUpload', file);
   formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
 
-  let { data } = await api.post('/fileupload', formData, {
+  await api.post('/fileupload', formData, {
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'multipart/form-data'
     }
-  });
-
-  dispatch({
-    type: "FILE_UPLOADED",
-    payload: {
-      name: file.name,
-      id: data.fileId
-    }
-  });
+  })
+  .then(data => {
+    dispatch({
+      type: "FILE_UPLOADED",
+      payload: {
+        name: file.name,
+        id: data.data.fileId
+      }
+    });
+  })
+  .catch(error => {
+    dispatch({
+      type: 'FILE_UPLOAD_ERROR',
+      payload: getResponseError(error)
+    });
+  });;
 };
 
 const getResponseError = (error) => `Error occured: ${error.message}`;

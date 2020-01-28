@@ -35,7 +35,7 @@ app.post('/authenticate', async (req, res, next) => {
     }
 });
 
-app.post('/fileUpload', async (req, res) => {
+app.post('/fileUpload', async (req, res, next) => {
     var file = req.files.fileToUpload;
 
     var filePath = path.join(__dirname, '../uploads', file.name);
@@ -63,8 +63,10 @@ app.post('/fileUpload', async (req, res) => {
 
         res.send(data);
     }
-    catch(error){
-        throw error;
+    catch (error) {
+        res.statusCode = error.response.status;
+        var resultError = new Error(error.response.statusCode);
+        next(resultError);
     }
 });
 

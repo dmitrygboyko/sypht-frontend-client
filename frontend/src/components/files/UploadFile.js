@@ -16,6 +16,7 @@ function UploadFile(props) {
         <form>
             <input type="file" name="uploadFileInput" hidden ref={fileUploadRef} onChange={() => uploadFile()}></input>
             <button className="btn btn-info upload" onClick={(e) => selectFile(e)}>Upload file</button>
+            <p className="error">{props.errorMessage}</p>
         </form>
     );
 }

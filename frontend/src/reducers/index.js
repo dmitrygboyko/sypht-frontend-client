@@ -9,6 +9,7 @@ function getAuthState() {
 }
 
 const defaultFileManagementState = {
+    errorMessage: "",
     selectedFile: null,
     files: [
         { id: "d5941e37-976b-4b91-a1de-4c62ece5ae17", name: "receipt.pdf", isLoaded: false, data: null },
@@ -46,6 +47,7 @@ const fileManagementReducer = (state = defaultFileManagementState, action) => {
 
             return newState;
         case "FILE_RESULT_ERROR":
+        case "FILE_UPLOAD_ERROR":
             return Object.assign({}, state, {errorMessage: action.payload});
         default:
             return state;
