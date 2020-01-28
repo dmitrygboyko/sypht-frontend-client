@@ -9,7 +9,7 @@ function FileDetails(props) {
 
     useEffect(() => {
         if (requireLoading) {
-            props.getFileResults(props.match.params.fileId, props.authToken);
+            props.getFileResults(props.match.params.fileId, props.auth.accessToken);
         }
     });
 
@@ -69,10 +69,10 @@ function FileDetails(props) {
 }
 
 const mapStateToProps = (state, props) => {
-    const authToken = state.authToken;
+    const auth = state.auth;
     const selectedFile = state.fileManagement.selectedFile
     return {
-        authToken: authToken,
+        auth: auth,
         selectedFile: selectedFile
     };
 };

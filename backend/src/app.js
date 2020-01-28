@@ -17,7 +17,7 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json())
 app.use(fileUpload());
 
-app.post('/authenticate', async (req, res) => {
+app.post('/authenticate', async (req, res, next) => {
     try {
         let { data } = await axios.post(`https://login.sypht.com/oauth/token`, {
             client_id: req.body.clientId,
@@ -29,7 +29,9 @@ app.post('/authenticate', async (req, res) => {
         res.send(data);
     }
     catch (error) {
-        console.log(error)
+        res.statusCode = error.response.status;
+        var resultError = new Error(error.response.statusCode);
+        next(resultError);
     }
 });
 

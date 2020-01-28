@@ -4,7 +4,7 @@ function UploadFile(props) {
     var fileUploadRef = React.createRef();
 
     const uploadFile = () => {
-        props.uploadFile(props.authToken, fileUploadRef.current.files[0]);
+        props.uploadFile(props.accessToken, fileUploadRef.current.files[0]);
     }
 
     const selectFile = (e) => {

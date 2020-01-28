@@ -5,6 +5,10 @@ function Authenticate(props) {
     var clientSecret = "";
 
     const authenticate = () => {
+        if (!clientId || !clientSecret) {
+            return;
+        }
+
         props.authenticate(clientId, clientSecret);
         clientId = "";
         clientSecret = ""
@@ -16,6 +20,7 @@ function Authenticate(props) {
             <input className="form-control" type="text" placeholder="client id" onChange={(e) => clientId = e.target.value}></input>
             <input className="form-control" type="text" placeholder="client secret" onChange={(e) => clientSecret = e.target.value}></input>
             <button className="btn btn-info" onClick={() => authenticate()}>Authenticate</button>
+            <p className="error">{props.errorMessage}</p>
         </div>
     );
 }

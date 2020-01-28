@@ -1,23 +1,32 @@
 import { combineReducers } from 'redux'
 
-function getStorateItem() {
-    return localStorage.getItem('authToken');
+function getAuthState() {
+    return {
+        accessToken: localStorage.getItem('accessToken'),
+        expiresAt: localStorage.getItem('expiresAt'),
+        errorMessage: ""
+    }
 }
 
 const defaultFileManagementState = {
     selectedFile: null,
     files: [
-        { id: "d5941e37-976b-4b91-a1de-4c62ece5ae17", name: "receipt.pdf", isLoaded: false, data: null },
-        { id: "2e8e64ce-63d0-4650-8f19-c17a67296523", name: "agl_bill.pdf", isLoaded: false, data: null },
-        { id: "76a9a736-19ec-4c16-aabb-4a08c7a6a1a3", name: "Sample_Invoice.pdf", isLoaded: false, data: null }
+        // { id: "d5941e37-976b-4b91-a1de-4c62ece5ae17", name: "receipt.pdf", isLoaded: false, data: null },
+        // { id: "2e8e64ce-63d0-4650-8f19-c17a67296523", name: "agl_bill.pdf", isLoaded: false, data: null },
+        // { id: "76a9a736-19ec-4c16-aabb-4a08c7a6a1a3", name: "Sample_Invoice.pdf", isLoaded: false, data: null }
     ]
 };
 
-const authenticationReducer = (state = getStorateItem(), action) => {
+const authenticationReducer = (state = getAuthState(), action) => {
     switch (action.type) {
         case "AUTHENTICATION_RESULT_RECEIVED":
         case "CLEAR_AUTH_TOKEN":
-            return action.payload;
+            return Object.assign({}, state, {
+                errorMessage: "",
+                accessToken: action.payload
+            });
+        case "AUTHENTICATION_ERROR":
+            return Object.assign({}, state, {errorMessage: action.payload})
         default:
             return state;
     }
@@ -57,6 +66,6 @@ const fileManagementReducer = (state = defaultFileManagementState, action) => {
 }
 
 export default combineReducers({
-    authToken: authenticationReducer,
+    auth: authenticationReducer,
     fileManagement: fileManagementReducer
 });

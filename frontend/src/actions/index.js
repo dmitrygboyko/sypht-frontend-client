@@ -1,18 +1,25 @@
 import api from '../api'
 
 export const authenticate = (clientId, clientSecret) => async dispatch => {
-  const authResult = await api.post('/authenticate', {
+  await api.post('/authenticate', {
     "clientId": clientId,
     "clientSecret": clientSecret
-  });
-
-  dispatch({
-    type: 'AUTHENTICATION_RESULT_RECEIVED',
-    payload: authResult.data.access_token
+  })
+  .then(data => {
+    dispatch({
+      type: 'AUTHENTICATION_RESULT_RECEIVED',
+      payload: data.data.access_token
+    });
+  })
+  .catch(function (error) {
+    dispatch({
+      type: 'AUTHENTICATION_ERROR',
+      payload: `Error: ${error.response.status} ${error.response.statusText}`
+    });
   });
 };
 
-export const clearAuthToken = () => dispatch => {
+export const clearAccessToken = () => dispatch => {
   dispatch({
     type: 'CLEAR_AUTH_TOKEN',
     payload: ""
@@ -28,8 +35,8 @@ export const selectFile = (fileId, files) => dispatch => {
   });
 };
 
-export const getFileResults = (fileId, authToken) => async dispatch => {
-  api.defaults.headers.common = { 'Authorization': `Bearer ${authToken}` }
+export const getFileResults = (fileId, accessToken) => async dispatch => {
+  api.defaults.headers.common = { 'Authorization': `Bearer ${accessToken}` }
   const fileResults = await api.get(`/results/${fileId}`);
 
   dispatch({
@@ -41,14 +48,14 @@ export const getFileResults = (fileId, authToken) => async dispatch => {
   });
 };
 
-export const uploadFile = (authToken, file) => async dispatch => {
+export const uploadFile = (accessToken, file) => async dispatch => {
   let formData = new FormData();
   formData.append('fileToUpload', file);
   formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
 
   let { data } = await api.post('/fileupload', formData, {
     headers: {
-      'Authorization': `Bearer ${authToken}`,
+      'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'multipart/form-data'
     }
   });
