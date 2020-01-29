@@ -9,7 +9,7 @@ import { authenticate, clearAccessToken, selectFile, uploadFile } from '../../ac
 
 function Main(props) {
     const calculateTotalAmount = (files) => {
-        if (files && files.length == 0) {
+        if (!files || files.length == 0) {
             return 0;
         }
 
