@@ -10,6 +10,7 @@ function getAuthState() {
 }
 
 const defaultFileManagementState = {
+    sendingRequest: false,
     errorMessage: "",
     selectedFile: null,
     files: []
@@ -32,20 +33,29 @@ const authenticationReducer = (state = getAuthState(), action) => {
 
 const fileManagementReducer = (state = defaultFileManagementState, action) => {
     switch (action.type) {
+        case actionTypes.SENDING_FILE_REQUEST:
+            return Object.assign({}, state, {
+                errorMessage: "",
+                sendingRequest: true
+            });
         case actionTypes.FILE_SELELCTED:
-            return Object.assign({}, state, { errorMessage: "", selectedFile: action.payload });
+            return Object.assign({}, state, { errorMessage: "", sendingRequest: false, selectedFile: action.payload });
         case actionTypes.RESULT_RECEIVED:
             return getFileResultReceivedState(state, action);
         case actionTypes.FILE_UPLOADED:
             var newState = Object.assign({}, state.files, {
                 errorMessage: "",
+                sendingRequest: false,
                 files: [...state.files, action.payload]
             });
 
             return newState;
         case actionTypes.FILE_RESULT_ERROR:
         case actionTypes.FILE_UPLOAD_ERROR:
-            return Object.assign({}, state, {errorMessage: action.payload});
+            return Object.assign({}, state, {
+                sendingRequest: false,
+                errorMessage: action.payload
+            });
         default:
             return state;
     }

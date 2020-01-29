@@ -47,7 +47,6 @@ app.post('/fileUpload', async (req, res, next) => {
     try {
         var fileName = file.name;
         var fileData = fs.createReadStream(filePath);
-        //var fileData = req.files.fileToUpload.data;
         let formData = new FormData();
         formData.append('fileToUpload', fileData, {fileName});
         formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
@@ -61,6 +60,8 @@ app.post('/fileUpload', async (req, res, next) => {
         {
             timeout: 30000
         });
+
+        fs.unlinkSync(filePath);
 
         res.send(data);
     }

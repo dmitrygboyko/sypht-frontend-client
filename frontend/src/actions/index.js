@@ -59,6 +59,11 @@ export const getFileResults = (fileId, accessToken) => async dispatch => {
 };
 
 export const uploadFile = (accessToken, file) => async dispatch => {
+  dispatch({
+    type: actionTypes.SENDING_FILE_REQUEST,
+    payload: true
+  });
+
   let formData = new FormData();
   formData.append('fileToUpload', file);
   formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));

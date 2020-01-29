@@ -26,6 +26,10 @@ ul {
     clear: both;
 }
 
+.textAlignCenter {
+    text-align: center;
+}
+
 .authenticate {
     text-align: center;
     margin: 20px 0px 40px 0px;

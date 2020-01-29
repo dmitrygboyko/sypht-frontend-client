@@ -1,4 +1,5 @@
 import React from 'react'
+import loader from '../../images/ajax-loader-small.gif'
 
 function UploadFile(props) {
     var fileUploadRef = React.createRef();
@@ -12,11 +13,22 @@ function UploadFile(props) {
         fileUploadRef.current.click();
     }
 
+    var img = props.sendingRequest
+        ? <img src={loader}></img>
+        : <img></img>;
+
+    var errorMessage = props.sendingRequest
+        ? ""
+        : props.errorMessage;
+
     return (
         <form>
             <input type="file" name="uploadFileInput" hidden ref={fileUploadRef} onChange={() => uploadFile()}></input>
             <button className="btn btn-info upload" onClick={(e) => selectFile(e)}>Upload file</button>
-            <p className="error">{props.errorMessage}</p>
+            <div className="textAlignCenter">
+                {img}
+            </div>
+            <p className="error">{errorMessage}</p>
         </form>
     );
 }

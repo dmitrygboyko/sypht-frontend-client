@@ -8,29 +8,29 @@ import UploadFile from './UploadFile'
 import { authenticate, clearAccessToken, selectFile, uploadFile } from '../../actions'
 
 function Main(props) {
-    const calculateTotalAmountDue = (files) => {
+    const calculateTotalAmount = (files) => {
         if (files && files.length == 0) {
             return 0;
         }
 
-        var totalAmountDues = files.map(item => {
+        var totalAmounts = files.map(item => {
             if (!item.data) {
                 return 0;
             }
 
-            const amountDueField = item.data.results.fields.find(x => x.name.toLowerCase().indexOf("amountdue") != -1);
+            const totalAmountField = item.data.results.fields.find(x => x.name.toLowerCase().indexOf("total") != -1);
 
-            if (!amountDueField) {
+            if (!totalAmountField) {
                 return 0;
             }
 
-            const amountDue = !amountDueField.value ? 0 : parseFloat(amountDueField.value);
-            return !amountDue ? 0 : amountDue;
+            const total = !totalAmountField.value ? 0 : parseFloat(totalAmountField.value);
+            return !total ? 0 : total;
         });
 
-        var totalAmountDue = totalAmountDues.reduce((a, b) => a + b);
+        var totalAmount = totalAmounts.reduce((a, b) => a + b);
 
-        return totalAmountDue;
+        return totalAmount;
     }
 
     const isAuthenticated = !!props.auth.accessToken;
@@ -45,7 +45,13 @@ function Main(props) {
                 </div>
             );
 
-        var totalAmountDue = calculateTotalAmountDue(props.fileManagement.files);
+        var totalAmountDue = calculateTotalAmount(props.fileManagement.files);
+        var totalAmountDueElement = props.fileManagement.files.length == 0
+            ? <div></div>
+            : <div>
+                <h4>Total: {totalAmountDue}</h4>
+                <p>Cleck View to view file processing results and update total amount</p>
+            </div>
 
         return (
             <div className="component-main">
@@ -55,10 +61,8 @@ function Main(props) {
                 </div>
                 {fileList}
                 <br />
-                <div>
-                    <h4>Total amount due: {totalAmountDue}</h4>
-                </div>
-                <UploadFile uploadFile={props.uploadFile} accessToken={props.auth.accessToken} errorMessage={props.fileManagement.errorMessage} />
+                {totalAmountDueElement}
+                <UploadFile uploadFile={props.uploadFile} sendingRequest={props.fileManagement.sendingRequest} accessToken={props.auth.accessToken} errorMessage={props.fileManagement.errorMessage} />
             </div>
         )
     }
