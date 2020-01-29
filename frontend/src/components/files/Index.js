@@ -8,6 +8,27 @@ import UploadFile from './UploadFile'
 import { authenticate, clearAccessToken, selectFile, uploadFile } from '../../actions'
 
 function Main(props) {
+    const calculateTotalAmountDue = (files) => {
+        var totalAmountDues = files.map(item => {
+            if (!item.data) {
+                return 0;
+            }
+
+            const amountDueField = item.data.results.fields.find(x => x.name.toLowerCase().indexOf("amountdue") != -1);
+
+            if (!amountDueField) {
+                return 0;
+            }
+
+            const amountDue = !amountDueField.value ? 0 : parseFloat(amountDueField.value);
+            return !amountDue ? 0 : amountDue;
+        });
+
+        var totalAmountDue = totalAmountDues.reduce((a, b) => a + b);
+
+        return totalAmountDue;
+    }
+
     const isAuthenticated = !!props.auth.accessToken;
 
     if (isAuthenticated) {
@@ -20,6 +41,8 @@ function Main(props) {
                 </div>
             );
 
+        var totalAmountDue = calculateTotalAmountDue(props.fileManagement.files);
+
         return (
             <div className="component-main">
                 <div className="authenticate">
@@ -28,7 +51,10 @@ function Main(props) {
                 </div>
                 {fileList}
                 <br />
-                <UploadFile uploadFile={props.uploadFile} accessToken={props.auth.accessToken} errorMessage={props.fileManagement.errorMessage}/>
+                <div>
+                    <h4>Total amount due: {totalAmountDue}</h4>
+                </div>
+                <UploadFile uploadFile={props.uploadFile} accessToken={props.auth.accessToken} errorMessage={props.fileManagement.errorMessage} />
             </div>
         )
     }
@@ -38,9 +64,9 @@ function Main(props) {
 }
 
 
-//It is not a good practise, but our app is small 
+//It is not the best practise, but our app is small 
 // and we uilize almost whole state here
-const mapStateToProps = state => state  
+const mapStateToProps = state => state
 
 export default connect(mapStateToProps,
-{ authenticate, clearAccessToken, selectFile, uploadFile })(Main);
+    { authenticate, clearAccessToken, selectFile, uploadFile })(Main);
