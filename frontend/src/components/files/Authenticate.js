@@ -1,26 +1,37 @@
 import React from 'react'
+import loader from '../../images/ajax-loader-small.gif'
 
 function Authenticate(props) {
-    var clientId = "";
-    var clientSecret = "";
+    var clientIdRef = React.createRef();
+    var clientSecretRef = React.createRef();
 
     const authenticate = () => {
+        var clientId = clientIdRef.current.value;
+        var clientSecret = clientSecretRef.current.value;
+
         if (!clientId || !clientSecret) {
             return;
         }
 
         props.authenticate(clientId, clientSecret);
-        clientId = "";
-        clientSecret = ""
     }
+
+    var img = props.sendingRequest
+    ? <img src={loader}></img>
+    : <img></img>;
+
+    var errorMessage = props.sendingRequest
+        ? ""
+        : props.errorMessage;
 
     return (
         <div className="authenticate">
             <p>Please authenticate to start with Sypht API</p>
-            <input className="form-control" type="text" placeholder="client id" onChange={(e) => clientId = e.target.value}></input>
-            <input className="form-control" type="text" placeholder="client secret" onChange={(e) => clientSecret = e.target.value}></input>
+            <input className="form-control" type="text" ref={clientIdRef} placeholder="client id"></input>
+            <input className="form-control" type="text" ref={clientSecretRef} placeholder="client secret"></input>
+            <div>{img}</div>
             <button className="btn btn-info" onClick={() => authenticate()}>Authenticate</button>
-            <p className="error">{props.errorMessage}</p>
+            <p className="error">{errorMessage}</p>
         </div>
     );
 }

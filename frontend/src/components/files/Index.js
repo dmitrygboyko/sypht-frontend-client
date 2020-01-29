@@ -67,7 +67,7 @@ function Main(props) {
         )
     }
     else {
-        return <Authenticate authenticate={props.authenticate} errorMessage={props.auth.errorMessage}></Authenticate>
+        return <Authenticate authenticate={props.authenticate} sendingRequest={props.auth.sendingRequest} errorMessage={props.auth.errorMessage}></Authenticate>
     }
 }
 

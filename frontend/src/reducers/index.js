@@ -4,7 +4,7 @@ import * as actionTypes from '../actionTypes';
 function getAuthState() {
     return {
         accessToken: localStorage.getItem('accessToken'),
-        expiresAt: localStorage.getItem('expiresAt'),
+        sendingRequest: false,
         errorMessage: ""
     }
 }
@@ -18,14 +18,17 @@ const defaultFileManagementState = {
 
 const authenticationReducer = (state = getAuthState(), action) => {
     switch (action.type) {
+        case actionTypes.SENDING_AUTH_REQUEST:
+            return Object.assign({}, state, { sendingRequest: true })
         case actionTypes.AUTHENTICATION_RESULT_RECEIVED:
         case actionTypes.CLEAR_AUTH_TOKEN:
             return Object.assign({}, state, {
+                sendingRequest: false,
                 errorMessage: "",
                 accessToken: action.payload
             });
         case actionTypes.AUTHENTICATION_ERROR:
-            return Object.assign({}, state, { errorMessage: action.payload })
+            return Object.assign({}, state, { sendingRequest: false, errorMessage: action.payload })
         default:
             return state;
     }

@@ -11,7 +11,6 @@ const store = createStore(reducers, applyMiddleware(thunk));
 
 store.subscribe(() => {
     localStorage.setItem('accessToken', store.getState().auth.accessToken);
-    localStorage.setItem('expiresAt', store.getState().auth.expiresAt);
 });
 
 ReactDOM.render(

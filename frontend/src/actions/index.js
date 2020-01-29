@@ -2,6 +2,11 @@ import api from '../api'
 import * as actionTypes from '../actionTypes'
 
 export const authenticate = (clientId, clientSecret) => async dispatch => {
+  dispatch({
+    type: actionTypes.SENDING_AUTH_REQUEST,
+    payload: true
+  });
+  
   const postedData = {
     "clientId": clientId,
     "clientSecret": clientSecret
@@ -39,8 +44,11 @@ export const selectFile = (fileId, files) => dispatch => {
 };
 
 export const getFileResults = (fileId, accessToken) => async dispatch => {
-  api.defaults.headers.common = { 'Authorization': `Bearer ${accessToken}` }
-  await api.get(`/results/${fileId}`)
+  await api.get(`/results/${fileId}`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  })
     .then(data => {
       dispatch({
         type: actionTypes.RESULT_RECEIVED,
@@ -74,21 +82,21 @@ export const uploadFile = (accessToken, file) => async dispatch => {
       'Content-Type': 'multipart/form-data'
     }
   })
-  .then(data => {
-    dispatch({
-      type: actionTypes.FILE_UPLOADED,
-      payload: {
-        name: file.name,
-        id: data.data.fileId
-      }
-    });
-  })
-  .catch(error => {
-    dispatch({
-      type: actionTypes.FILE_UPLOAD_ERROR,
-      payload: getResponseError(error)
-    });
-  });;
+    .then(data => {
+      dispatch({
+        type: actionTypes.FILE_UPLOADED,
+        payload: {
+          name: file.name,
+          id: data.data.fileId
+        }
+      });
+    })
+    .catch(error => {
+      dispatch({
+        type: actionTypes.FILE_UPLOAD_ERROR,
+        payload: getResponseError(error)
+      });
+    });;
 };
 
 const getResponseError = (error) => `Error occured: ${error.message}`;
