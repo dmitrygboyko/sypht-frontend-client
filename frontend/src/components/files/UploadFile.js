@@ -6,6 +6,7 @@ function UploadFile(props) {
 
     const uploadFile = () => {
         props.uploadFile(props.accessToken, fileUploadRef.current.files[0]);
+        fileUploadRef.current.value = null;
     }
 
     const selectFile = (e) => {
