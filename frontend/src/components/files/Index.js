@@ -35,40 +35,41 @@ function Main(props) {
 
     const isAuthenticated = !!props.auth.accessToken;
 
-    if (isAuthenticated) {
-        var fileList = props.fileManagement.files.length === 0
-            ? <h4>No files uploaded</h4>
-            : (
-                <div>
-                    <h4>Uploaded files</h4>
-                    <FileList files={props.fileManagement.files} selectFile={props.selectFile} />
-                </div>
-            );
 
-        var totalAmountDue = calculateTotalAmount(props.fileManagement.files);
-        var totalAmountDueElement = props.fileManagement.files.length == 0
-            ? <div></div>
-            : <div>
-                <h4>Total: {totalAmountDue}</h4>
-                <p>Cleck View to view file processing results and update total amount</p>
+    var fileList = props.fileManagement.files.length === 0
+        ? <h4>No files uploaded</h4>
+        : (
+            <div>
+                <h4>Uploaded files</h4>
+                <FileList files={props.fileManagement.files} selectFile={props.selectFile} />
             </div>
+        );
 
-        return (
+    var totalAmountDue = calculateTotalAmount(props.fileManagement.files);
+    var totalAmountDueElement = props.fileManagement.files.length == 0
+        ? <div></div>
+        : <div>
+            <h4>Total: {totalAmountDue}</h4>
+            <p>Cleck View to view file processing results and update total amount</p>
+        </div>
+
+    var main = !isAuthenticated
+        ? <div></div>
+        : (
             <div className="component-main">
-                <div className="authenticate">
-                    <p>You are authenticated. Enjoy Sypht API</p>
-                    <button className="btn btn-light" onClick={() => props.clearAccessToken()}>Clear Access Token</button>
-                </div>
                 {fileList}
                 <br />
                 {totalAmountDueElement}
                 <UploadFile uploadFile={props.uploadFile} sendingRequest={props.fileManagement.sendingRequest} accessToken={props.auth.accessToken} errorMessage={props.fileManagement.errorMessage} />
             </div>
-        )
-    }
-    else {
-        return <Authenticate authenticate={props.authenticate} sendingRequest={props.auth.sendingRequest} errorMessage={props.auth.errorMessage}></Authenticate>
-    }
+        );
+
+    return (
+        <div>
+            <Authenticate authenticate={props.authenticate} isAuthenticated={isAuthenticated} clearAccessToken={props.clearAccessToken} auth={props.auth}></Authenticate>
+            {main}
+        </div>
+    )
 }
 
 
