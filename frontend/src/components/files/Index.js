@@ -14,7 +14,7 @@ function Main(props) {
         }
 
         var totalAmounts = files.map(item => {
-            if (!item.data) {
+            if (!item.data || !item.data.results) {
                 return 0;
             }
 
