@@ -23,7 +23,7 @@ function UploadFile(props) {
 
     return (
         <form>
-            <input type="file" name="uploadFileInput" hidden ref={fileUploadRef} onChange={() => uploadFile()}></input>
+            <input type="file" accept=".pdf" name="uploadFileInput" hidden ref={fileUploadRef} onChange={() => uploadFile()}></input>
             <button className="btn btn-info upload" onClick={(e) => selectFile(e)}>Upload file</button>
             <div className="textAlignCenter">
                 {img}
