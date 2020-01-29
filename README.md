@@ -14,5 +14,7 @@ In the back-end project directory run the following command:
 ### `npm install`
 ### `node app.js`
 
+The last command runs a web server on http://localhost:3001
+
 
 
