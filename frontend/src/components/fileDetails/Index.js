@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.css';
+import './FileDetails.css'
 import loader from '../../images/ajax-loader.gif'
 import { getFileResults } from '../../actions'
 
@@ -19,14 +20,16 @@ function FileDetails(props) {
 
     if (requireLoading) {
         return (
-            <div>
+            <div className="loader-container">
                 <img src={loader} alt="loading..." />
             </div>
         )
     }
     else {
         var data = props.selectedFile.data;
-        var fields = data.results.fields.map((item) => {
+        var filteredFields = data.results.fields.filter(x => x.name.toLowerCase().indexOf('.type') == -1);
+
+        var fields = filteredFields.map((item) => {
             const value = item.value ? item.value.toString() : "empty";
             const nameParts = item.name.split('.');
             var name = nameParts.length == 2 ? nameParts[1] : item.name;

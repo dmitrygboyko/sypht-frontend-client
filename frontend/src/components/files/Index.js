@@ -40,7 +40,7 @@ function Main(props) {
             ? <h4>No files uploaded</h4>
             : (
                 <div>
-                    <h4>Uploaded flies</h4>
+                    <h4>Uploaded files</h4>
                     <FileList files={props.fileManagement.files} selectFile={props.selectFile} />
                 </div>
             );

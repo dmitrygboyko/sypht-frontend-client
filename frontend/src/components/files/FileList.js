@@ -6,7 +6,7 @@ function FileList(props) {
         return (
             <li key={index} className="list-group-item">
                 <div>
-                    <div className="alignLeft">{file.name}</div>
+                    <div className="alignLeft">{!file.name ? file.id : file.name}</div>
                     <div className="alignRight">
                     <Link to={`/documents/${file.id}`} onClick={() => props.selectFile(file.id, props.files)}>View</Link>
                     </div>
