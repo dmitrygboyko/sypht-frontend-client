@@ -17,12 +17,15 @@ app.use(function (req, res, next) {
 app.use(bodyParser.json())
 app.use(fileUpload());
 
+const LOGIN_URL = 'https://login.sypht.com';
+const API_URL = 'https://api.sypht.com';
+
 app.post('/authenticate', async (req, res, next) => {
     try {
-        let { data } = await axios.post(`https://login.sypht.com/oauth/token`, {
+        let { data } = await axios.post(`${LOGIN_URL}/oauth/token`, {
             client_id: req.body.clientId,
             client_secret: req.body.clientSecret,
-            audience: 'https://api.sypht.com',
+            audience: API_URL,
             grant_type: 'client_credentials'
         }, {timeout: 10000});
 
@@ -49,7 +52,7 @@ app.post('/fileUpload', async (req, res, next) => {
         formData.append('fileToUpload', fileData, {fileName});
         formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
 
-        let {data} = await axios.post(`https://api.sypht.com/fileupload`, formData, {
+        let {data} = await axios.post(`${API_URL}/fileupload`, formData, {
             headers:{
                 'Authorization':`${req.headers.authorization}`,
                 'Content-Type': formData.getHeaders()['content-type']
@@ -68,7 +71,7 @@ app.post('/fileUpload', async (req, res, next) => {
 
 app.get('/results/:fileId', async (req, res, next) => {
     try {
-        let { data } = await axios.get(`https://api.sypht.com/result/final/${req.params.fileId}`, {
+        let { data } = await axios.get(`${API_URL}/result/final/${req.params.fileId}`, {
             headers: {
                 'Authorization': `${req.headers.authorization}`
             }
@@ -88,9 +91,6 @@ const handleError = (error, res, next) => {
 
     next(error);
 }
-
-
-
 
 app.listen(3001, () => {
     console.log('Server is up on port 3001');
