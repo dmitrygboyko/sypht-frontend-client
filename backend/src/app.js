@@ -1,10 +1,21 @@
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const fileUpload = require('express-fileupload');
 const path = require('path');
 const fs = require('fs');
 const FormData = require('form-data')
+const multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '_' + Date.now() + '.pdf')
+    }
+})
+
+var upload = multer({ storage: storage })
 
 const app = express();
 
@@ -15,7 +26,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json())
-app.use(fileUpload());
+
 
 const LOGIN_URL = 'https://login.sypht.com';
 const API_URL = 'https://api.sypht.com';
@@ -27,7 +38,7 @@ app.post('/authenticate', async (req, res, next) => {
             client_secret: req.body.clientSecret,
             audience: API_URL,
             grant_type: 'client_credentials'
-        }, {timeout: 10000});
+        }, { timeout: 10000 });
 
         res.send(data);
     }
@@ -36,37 +47,35 @@ app.post('/authenticate', async (req, res, next) => {
     }
 });
 
-app.post('/fileUpload', async (req, res, next) => {
-    var file = req.files.fileToUpload;
-
-    var filePath = path.join(__dirname, '../uploads', file.name);
-    file.mv(filePath, (err) => {
-        if (err) throw err;
-    })
+app.post('/fileUpload', upload.single('fileToUpload'), async (req, res, next) => {
+    var filePath = req.file.path;
+    var fileName = path.basename(filePath);
 
     try {
-        var fileName = file.name;
         var fileData = fs.createReadStream(filePath);
         let formData = new FormData();
-        formData.append('fileToUpload', fileData, {fileName});
+        formData.append('fileToUpload', fileData, { fileName });
         formData.append('fieldSets', JSON.stringify(['sypht.invoice', 'sypht.document']));
 
-        let {data} = await axios.post(`${API_URL}/fileupload`, formData, {
-            headers:{
-                'Authorization':`${req.headers.authorization}`,
+        let { data } = await axios.post(`${API_URL}/fileupload`, formData, {
+            headers: {
+                'Authorization': `${req.headers.authorization}`,
                 'Content-Type': formData.getHeaders()['content-type']
             }
         },
-        {
-            timeout: 30000
-        });
-
-        fs.unlinkSync(filePath);
+            {
+                timeout: 30000
+            });
 
         res.send(data);
     }
     catch (error) {
         handleError(error, res, next);
+    }
+    finally {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
     }
 });
 
@@ -76,7 +85,7 @@ app.get('/results/:fileId', async (req, res, next) => {
             headers: {
                 'Authorization': `${req.headers.authorization}`
             }
-        },{timeout: 10000});
+        }, { timeout: 10000 });
         res.send(data);
     }
     catch (error) {
