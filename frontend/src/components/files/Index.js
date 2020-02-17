@@ -18,7 +18,9 @@ function Main(props) {
                 return 0;
             }
 
-            const totalAmountField = item.data.results.fields.find(x => x.name.toLowerCase().indexOf("total") != -1);
+            const totalFieldName = "total";
+            const subTotalFieldName = "subtotal"
+            const totalAmountField = item.data.results.fields.find(x => x.name.toLowerCase().indexOf(subTotalFieldName) === -1 && x.name.toLowerCase().indexOf(totalFieldName) !== -1);
 
             if (!totalAmountField) {
                 return 0;
